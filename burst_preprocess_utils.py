@@ -30,23 +30,23 @@ def load_dataset(base_dir, part, colored_image):
     X = []; X_masks = []; y = []; y_masks = []
     burstSR = BurstSRDataset(root='C:/Users/Default.DESKTOP-FRPMN5G/Documents/Master/UC/project/burstsr_dataset', split=part, colored_image=colored_image)
     if part == 'train':
-        num_images = 2000
+        num_images = 100
     elif part == 'val':
-        num_images = 882
+        num_images = 100
     for i in tqdm(range(num_images)):
         # LRs = sorted(glob(imgset+"/samsung*"))
         burst, frame_gt, meta_info_burst, meta_info_gt = burstSR.__getitem__(i)
         # QMs = sorted(glob(imgset+"/QM*.png"))
         T = len(burst)
         LR = np.empty((80,80,T),dtype="uint16")
-        QM = np.empty((80,80,T),dtype="bool")
+        QM = np.ones((80,80,T),dtype="bool")
         
         for i,img in enumerate(burst):
             # LR[...,i] = cv2.imread(img,cv2.IMREAD_UNCHANGED)
-            LR[...,i] = img
-        for i,img in enumerate(burst):
-            # QM[...,i] = cv2.imread(img,cv2.IMREAD_UNCHANGED).astype("bool")
-            QM[...,i] = img
+            LR[...,i] = img*255
+        # for i,img in enumerate(burst):
+        #     # QM[...,i] = cv2.imread(img,cv2.IMREAD_UNCHANGED).astype("bool")
+        #     QM[...,i] = img
         X.append(LR)
         X_masks.append(QM)
         if part != "test":

@@ -226,7 +226,7 @@ def load_txt(path):
 
 class BurstSRDataset(torch.utils.data.Dataset):
     """ Real-world burst super-resolution dataset. """
-    def __init__(self, root, burst_size=8, crop_sz=80, center_crop=False, random_flip=False, split='train', colored_image = False):
+    def __init__(self, root, burst_size=9, crop_sz=80, center_crop=False, random_flip=False, split='train', colored_image = False):
         """
         args:
             root : path of the root directory
