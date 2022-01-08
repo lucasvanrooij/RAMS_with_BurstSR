@@ -31,22 +31,28 @@ def load_dataset(base_dir, part, colored_image):
     X = []; X_masks = []; y = []; y_masks = []
     burstSR = BurstSRDataset(root='D:/Desktop/Master/Y2Semester1/UC/Project/burstsr_dataset', split=part, colored_image=colored_image)
     if part == 'train':
-        num_images = 10
+        num_images = 200
     elif part == 'val':
-        num_images = 10
+        num_images = 200
     j=0
-    HR_ALL = np.empty((num_images,640,640,1),dtype="uint16")
+    #HR_ALL = np.empty((num_images,640,640,1),dtype="uint16")
+    HR_ALL = np.empty((num_images,384,384,1),dtype="uint16")
     for i in tqdm(range(num_images)):
         # LRs = sorted(glob(imgset+"/samsung*"))
         burst, frame_gt, meta_info_burst, meta_info_gt = burstSR.__getitem__(i)
         # QMs = sorted(glob(imgset+"/QM*.png"))
         T = len(burst)
-        LR = np.empty((80,80,T),dtype="uint16")
-        QM = np.ones((80,80,T),dtype="bool")
-        GT = np.ones((640,640,1),dtype="bool")
+        #LR = np.empty((80,80,T),dtype="uint16")
+        LR = np.empty((128,128,T),dtype="uint16")
+        #QM = np.zeros((80,80,T),dtype="bool")
+        QM = np.zeros((128,128,T),dtype="bool")
+        #GT = np.zeros((640,640,1),dtype="bool")
+        GT = np.zeros((384,384,1),dtype="bool")
         for i,img in enumerate(burst):
             # LR[...,i] = cv2.imread(img,cv2.IMREAD_UNCHANGED)
-            LR[...,i] = img*255
+            test = np.empty((128,128,T),dtype="uint16")
+            test = img*255
+            LR[...,i] = cv2.resize(test.numpy(), dsize=(128, 128), interpolation=cv2.INTER_CUBIC)
         # for i,img in enumerate(burst):
         #     # QM[...,i] = cv2.imread(img,cv2.IMREAD_UNCHANGED).astype("bool")
         #     QM[...,i] = img
@@ -54,9 +60,10 @@ def load_dataset(base_dir, part, colored_image):
         X_masks.append(QM)
         if part != "test":
             #HR[] = frame_gt[...,None]
-            HR = np.empty((640,640,1),dtype="uint16")
+            HR = np.empty((348,348,1),dtype="uint16")
             frame_gt=frame_gt*255
-            test = frame_gt[...,None]
+            testt = cv2.resize(frame_gt.numpy(), dsize=(384, 384), interpolation=cv2.INTER_CUBIC)
+            test = testt[...,None]
             HR = test[:,:,:]
             HR_ALL[j] = HR
             #print(HR_ALL[j])
