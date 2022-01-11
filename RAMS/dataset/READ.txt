@@ -1,0 +1,1 @@
+Place here the processed BurstSR dataset this should consist of 6 (3 train and 3 val) .npy files.
